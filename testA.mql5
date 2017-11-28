@@ -86,3 +86,40 @@ js.Clear(); out="";
    b=jb.Deserialize(out); 
    Print("deserialize=",b); 
   } 
+  
+  /*
+  Practical example: authorization on a website and parsing the response
+
+CJAVal jv;
+jv["login"]="Login"; // login
+jv["password"]="Pass"; // password
+
+//--- serialize to string  {"login":"Login","password":"Pass"}
+char data[]; 
+ArrayResize(data, StringToCharArray(jv.Serialize(), data, 0, WHOLE_ARRAY)-1);
+
+//--- send data
+char res_data[];
+string res_headers=NULL;
+int r=WebRequest("POST", "http://my.site.com/Authorize", "Content-Type: text/plain\r\n", 5000, data, res_data, res_headers);
+
+//--- assume the answer {"accessToken":"ABRAKADABRA","session_id":124521}
+//--- get AccessToken
+jv.Deserialize(res_data);
+string AccessToken=jv["accessToken"].ToStr();
+
+
+====================================================
+#include <JAson.mqh>
+
+// Object
+CJAVal json;
+
+// Load in and deserialize the data
+json.Deserialize(data);
+
+// Try to access the data elements
+Alert(json["orderid"].ToInt());
+Alert(json["ordercurrency"].ToStr());
+  
+  */
